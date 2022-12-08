@@ -4,11 +4,12 @@ const getUserByEmail = async (email) => await User.findOne({ email });
 
 const getUserById = async (id) => await User.findOne({ _id: id });
 
-const createUser = async ({ password, email, subscription }) =>
+const createUser = async ({ password, email, subscription, avatarURL }) =>
   await User.create({
     password,
     email,
     subscription,
+    avatarURL,
   });
 
 const setToken = async (email, token) =>
@@ -27,6 +28,16 @@ const updateSubscription = async ({ subscription }, { _id }) => {
   );
 };
 
+const updateAvatar = async (avatarURL, { _id }) => {
+  return await User.findOneAndUpdate(
+    { _id },
+    { avatarURL },
+    {
+      new: true,
+    }
+  );
+};
+
 module.exports = {
   createUser,
   getUserByEmail,
@@ -34,4 +45,5 @@ module.exports = {
   getUserById,
   deleteToken,
   updateSubscription,
+  updateAvatar,
 };
