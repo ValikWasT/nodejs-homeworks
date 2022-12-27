@@ -31,4 +31,8 @@ router.get("/users/current", authMiddleware, usersModels.getCurrentUser);
 
 router.patch("/users", authMiddleware, usersModels.setKindOfSubscription);
 
+router.get("/users/verify/:verificationToken", usersModels.setSuccessVerify);
+
+router.post("/users/verify", usersModels.setSecondVerify);
+
 module.exports = router;
