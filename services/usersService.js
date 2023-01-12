@@ -45,12 +45,6 @@ const updateAvatar = async (avatarURL, { _id }) => {
   );
 };
 
-const setVerifyToken = async ({ verificationToken }) =>
-  await User.findOneAndUpdate(
-    { verificationToken },
-    { verificationToken: null, verify: true }
-  );
-
 module.exports = {
   createUser,
   getUserByEmail,
@@ -59,5 +53,4 @@ module.exports = {
   deleteToken,
   updateSubscription,
   updateAvatar,
-  setVerifyToken,
 };
