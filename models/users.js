@@ -3,6 +3,8 @@ const jwt = require("jsonwebtoken");
 const getValidation = require("../middlewares/validationMiddlewares");
 const service = require("../services/usersService");
 const gravatar = require("gravatar");
+const { v4: uuidv4 } = require("uuid");
+const emailsModels = require("../models/emails");
 
 const addUser = async (req, res) => {
   const bodyIsValid = await getValidation.userValid(req.body);
@@ -24,15 +26,19 @@ const addUser = async (req, res) => {
   const { email } = req.body;
   const avatarURL = gravatar.url(email);
   req.body.avatarURL = avatarURL;
+  const verificationToken = uuidv4();
+  req.body.verificationToken = verificationToken;
 
   try {
-    const results = await service.createUser(req.body);
-    res.status(201).json({
-      user: {
-        email: results.email,
-        subscription: results.subscription,
-      },
-    });
+    // const results =
+    await service.createUser(req.body);
+    // res.status(201).json({
+    //   user: {
+    //     email: results.email,
+    //     subscription: results.subscription,
+    //   },
+    // });
+    emailsModels.sendEmail(res, verificationToken);
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
@@ -52,6 +58,11 @@ const getUser = async (req, res) => {
     res
       .status(401)
       .json({ message: `No user with email: ${req.body.email} found` });
+    return;
+  }
+
+  if (!user.verify) {
+    res.status(400).json({ message: "User not verify" });
     return;
   }
 

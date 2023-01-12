@@ -1,6 +1,7 @@
 const express = require("express");
 const contactsModels = require("../../models/contacts");
 const usersModels = require("../../models/users");
+const emailsModels = require("../../models/emails");
 const { authMiddleware } = require("../../middlewares/authMiddleware");
 
 const router = express.Router();
@@ -30,5 +31,9 @@ router.post("/users/logout", authMiddleware, usersModels.logOut);
 router.get("/users/current", authMiddleware, usersModels.getCurrentUser);
 
 router.patch("/users", authMiddleware, usersModels.setKindOfSubscription);
+
+router.get("/users/verify/:verificationToken", emailsModels.setSuccessVerify);
+
+router.post("/users/verify", emailsModels.setSecondVerify);
 
 module.exports = router;
